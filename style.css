@@ -48,3 +48,22 @@ body {
   from { top: 0; }
   to { top: 600px; }
 }
+
+#gameArea {
+  position: relative;
+  margin: 20px auto;
+  width: 400px;
+  height: 600px;
+  background: linear-gradient(#111, #333);
+  overflow: hidden;
+  border: 2px solid #fff;
+  border-radius: 10px;
+}
+
+.particle {
+  position: absolute;
+  width: 2px;
+  height: 10px;
+  background: white;
+  opacity: 0.7;
+}
