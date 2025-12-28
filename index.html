@@ -1,6 +1,8 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Избегай препятствия 🎮</title>
   <link rel="stylesheet" href="style.css">
 </head>
@@ -10,9 +12,11 @@
   <h3>Лучший результат: <span id="highscore"></span></h3>
 
   <script>
+    // Показываем лучший результат
     document.getElementById('highscore').textContent = localStorage.getItem('highscore') || 0;
 
-    document.getElementById('startBtn').addEventListener('click', ()=>{
+    // Кнопка для старта игры
+    document.getElementById('startBtn').addEventListener('click', () => {
       window.location.href = "game.html";
     });
   </script>
