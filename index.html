@@ -6,14 +6,15 @@
 </head>
 <body>
   <h1>Избегай препятствия 🎮</h1>
-  <button onclick="startGame()">Начать игру</button>
+  <button id="startBtn">Начать игру</button>
   <h3>Лучший результат: <span id="highscore"></span></h3>
 
   <script>
     document.getElementById('highscore').textContent = localStorage.getItem('highscore') || 0;
-    function startGame(){
+
+    document.getElementById('startBtn').addEventListener('click', ()=>{
       window.location.href = "game.html";
-    }
+    });
   </script>
 </body>
 </html>
