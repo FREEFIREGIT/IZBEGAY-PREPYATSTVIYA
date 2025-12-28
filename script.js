@@ -56,6 +56,28 @@ function createBonus() {
   bonuses.push(bonus);
 }
 
+// -------- частицы для динамичного фона --------
+const particles = [];
+const particleCount = 50;
+
+for(let i=0; i<particleCount; i++){
+  const p = document.createElement('div');
+  p.classList.add('particle');
+  p.style.top = Math.random()*600 + 'px';
+  p.style.left = Math.random()*400 + 'px';
+  gameArea.appendChild(p);
+  particles.push(p);
+}
+
+function updateParticles(){
+  for(let p of particles){
+    let top = parseFloat(p.style.top);
+    top += 2 + speed/2;
+    if(top > 600) top = 0;
+    p.style.top = top + 'px';
+  }
+}
+
 // -------- обновление объектов --------
 function updateObstacles() {
   // Препятствия
@@ -69,7 +91,6 @@ function updateObstacles() {
     let playerRect = player.getBoundingClientRect();
     let obsRect = obs.getBoundingClientRect();
 
-    // столкновение
     if(!(playerRect.right < obsRect.left || 
          playerRect.left > obsRect.right || 
          playerRect.bottom < obsRect.top || 
@@ -107,7 +128,7 @@ function updateObstacles() {
          playerRect.bottom < bonusRect.top || 
          playerRect.top > bonusRect.bottom)){
       playBonusSound();
-      score += 3; // бонус +3 очка
+      score += 3;
       scoreEl.textContent = score;
       gameArea.removeChild(bonus);
       bonuses.splice(i,1);
@@ -123,8 +144,9 @@ function updateObstacles() {
 // -------- игровой цикл --------
 function gameLoop() {
   if(Math.random() < 0.02) createObstacle();
-  if(Math.random() < 0.005) createBonus(); // бонусы реже
+  if(Math.random() < 0.005) createBonus();
   updateObstacles();
+  updateParticles();
 }
 
 function gameOver() {
