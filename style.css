@@ -11,7 +11,7 @@ body {
   margin: 20px auto;
   width: 400px;
   height: 600px;
-  background: #333;
+  background: linear-gradient(#111, #333);
   overflow: hidden;
   border: 2px solid #fff;
   border-radius: 10px;
@@ -25,7 +25,7 @@ body {
   height: 40px;
   background: red;
   border-radius: 5px;
-  transition: left 0.05s;
+  transition: left 0.05s, background 0.2s;
 }
 
 .obstacle, .bonus {
@@ -40,24 +40,14 @@ body {
 }
 
 .bonus {
-  background: lightgreen;
   border: 2px solid white;
+  animation: glow 1s infinite alternate;
 }
 
-@keyframes fall {
-  from { top: 0; }
-  to { top: 600px; }
-}
-
-#gameArea {
-  position: relative;
-  margin: 20px auto;
-  width: 400px;
-  height: 600px;
-  background: linear-gradient(#111, #333);
-  overflow: hidden;
-  border: 2px solid #fff;
-  border-radius: 10px;
+@keyframes glow {
+  0% { box-shadow: 0 0 5px #fff; background: lightgreen; }
+  50% { box-shadow: 0 0 15px yellow; background: yellowgreen; }
+  100% { box-shadow: 0 0 5px #fff; background: lightgreen; }
 }
 
 .particle {
@@ -66,4 +56,5 @@ body {
   height: 10px;
   background: white;
   opacity: 0.7;
+  border-radius: 1px;
 }
