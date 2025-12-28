@@ -28,13 +28,20 @@ body {
   transition: left 0.05s;
 }
 
-.obstacle {
+.obstacle, .bonus {
   position: absolute;
   width: 40px;
   height: 40px;
-  background: yellow;
   border-radius: 5px;
-  animation: fall 1s linear;
+}
+
+.obstacle {
+  background: yellow;
+}
+
+.bonus {
+  background: lightgreen;
+  border: 2px solid white;
 }
 
 @keyframes fall {
