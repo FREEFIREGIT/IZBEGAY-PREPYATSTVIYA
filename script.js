@@ -28,13 +28,17 @@ function playSound(freq, type="sine", duration=0.1, volume=0.2){
 
 function playPointSound(){ playSound(800,"sine",0.1,0.2); }
 function playHitSound(){ playSound(200,"square",0.3,0.3); }
-function playBonusSound(){ playSound(1200,"triangle",0.15,0.25); }
+function playBonusSound(){ 
+  let freq = 1000 + level*50;
+  playSound(freq,"triangle",0.15,0.25); 
+}
 
 // -------- управление игроком --------
 document.addEventListener('keydown', (e) => {
   if(e.key === "ArrowLeft" && playerX > 0) playerX -= 20;
   if(e.key === "ArrowRight" && playerX < 360) playerX += 20;
   player.style.left = playerX + "px";
+  player.style.background = `hsl(${Math.random()*360},80%,50%)`;
 });
 
 // -------- создание препятствий и бонусов --------
@@ -78,6 +82,33 @@ function updateParticles(){
   }
 }
 
+// -------- создаём взрыв частиц --------
+function createExplosion(x, y){
+  for(let i=0;i<20;i++){
+    const p = document.createElement('div');
+    p.classList.add('particle');
+    p.style.top = y + 'px';
+    p.style.left = x + 'px';
+    gameArea.appendChild(p);
+
+    let angle = Math.random()*2*Math.PI;
+    let speedX = Math.cos(angle)*Math.random()*5;
+    let speedY = Math.sin(angle)*Math.random()*5;
+
+    const move = setInterval(()=>{
+      let top = parseFloat(p.style.top);
+      let left = parseFloat(p.style.left);
+      p.style.top = top + speedY + 'px';
+      p.style.left = left + speedX + 'px';
+      p.style.opacity -= 0.05;
+      if(parseFloat(p.style.opacity)<=0){
+        clearInterval(move);
+        gameArea.removeChild(p);
+      }
+    }, 20);
+  }
+}
+
 // -------- обновление объектов --------
 function updateObstacles() {
   // Препятствия
@@ -96,6 +127,7 @@ function updateObstacles() {
          playerRect.bottom < obsRect.top || 
          playerRect.top > obsRect.bottom)){
       playHitSound();
+      createExplosion(playerX+20, 580);
       gameOver();
     }
 
