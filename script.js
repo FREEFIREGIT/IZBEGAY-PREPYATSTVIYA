@@ -2,8 +2,6 @@ const player = document.getElementById('player');
 const gameArea = document.getElementById('gameArea');
 const scoreEl = document.getElementById('score');
 const levelEl = document.getElementById('level');
-const hitSound = document.getElementById('hitSound');
-const pointSound = document.getElementById('pointSound');
 
 let playerX = 180;
 let speed = 2;
@@ -12,6 +10,34 @@ let score = 0;
 let level = 1;
 let gameInterval;
 
+// -------- Web Audio для звуков --------
+const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+function playPointSound(){
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+  osc.connect(gain);
+  gain.connect(audioCtx.destination);
+  osc.type = 'sine';
+  osc.frequency.value = 800;
+  gain.gain.value = 0.2;
+  osc.start();
+  osc.stop(audioCtx.currentTime + 0.1);
+}
+
+function playHitSound(){
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+  osc.connect(gain);
+  gain.connect(audioCtx.destination);
+  osc.type = 'square';
+  osc.frequency.value = 200;
+  gain.gain.value = 0.3;
+  osc.start();
+  osc.stop(audioCtx.currentTime + 0.3);
+}
+
+// -------- управление игроком --------
 document.addEventListener('keydown', (e) => {
   if(e.key === "ArrowLeft" && playerX > 0) playerX -= 20;
   if(e.key === "ArrowRight" && playerX < 360) playerX += 20;
@@ -33,27 +59,30 @@ function updateObstacles() {
     let top = parseInt(obs.style.top);
     top += speed;
     obs.style.top = top + 'px';
-    obs.style.background = `hsl(${Math.random()*360},70%,50%)`; // красочные препятствия
+    obs.style.background = `hsl(${Math.random()*360},70%,50%)`;
 
     let playerRect = player.getBoundingClientRect();
     let obsRect = obs.getBoundingClientRect();
 
+    // столкновение
     if(!(playerRect.right < obsRect.left || 
          playerRect.left > obsRect.right || 
          playerRect.bottom < obsRect.top || 
          playerRect.top > obsRect.bottom)){
-      hitSound.play();
+      playHitSound();
       gameOver();
     }
 
+    // прошёл препятствие
     if(top > 600){
       gameArea.removeChild(obs);
       obstacles.splice(i,1);
       score++;
       scoreEl.textContent = score;
-      pointSound.play();
+      playPointSound();
+
       if(score % 5 === 0){
-        speed += 0.5; 
+        speed += 0.5;
         level++;
         levelEl.textContent = level;
       }
@@ -68,8 +97,6 @@ function gameLoop() {
 
 function gameOver() {
   clearInterval(gameInterval);
-  let highscore = localStorage.getItem('highscore') || 0;
-  if(score > highscore) localStorage.setItem('highscore', score);
   document.getElementById('message').textContent = `💥 Игра окончена! Очки: ${score}`;
   setTimeout(()=> window.location.href="index.html", 3000);
 }
